@@ -40,7 +40,7 @@ namespace SimpleTranslation {
             base.SetUpHotKey(ModifierKeys.Control | ModifierKeys.Shift | ModifierKeys.Alt, Key.L);
             base.SetupNofityIcon("SimpleTranslation", new System.Drawing.Icon("app.ico"));
 
-            base.AddContextMenu("Show", (sender,e)=> { base.SetWindowsState(false); });
+            base.AddContextMenu("Show", (sender,e)=> { ShowScreen(); });
             base.AddContextMenu("Setting", Setting_Click);
             base.AddContextMenu("Database", Database_Click);
             base.AddContextMenuSeparator();
@@ -51,6 +51,12 @@ namespace SimpleTranslation {
             Util.SetWindowYPosition(this, setting.Pos.Y);
 
             base.Minimized += MainWindow_Minimized;
+            base.Normalized += () => { this.ShowScreen(); };
+
+            var model = new MainViewModel();
+            model.SaveAction = new Action(this.SaveAction);
+            model.CancelAction = new Action(this.CancelAction);
+            this.DataContext = model;
         }
         #endregion
 
@@ -63,6 +69,17 @@ namespace SimpleTranslation {
             setting.Pos.X = this.Left;
             setting.Pos.Y = this.Top;
             setting.Save();
+        }
+
+        private void SaveAction() {
+
+        }
+
+        /// <summary>
+        /// cancel
+        /// </summary>
+        private void CancelAction() {
+            base.SetWindowsState(true);
         }
         #endregion
 
@@ -85,7 +102,45 @@ namespace SimpleTranslation {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Database_Click(object sender, EventArgs e) {
+            var setting = AppRepository.GetInstance();
+            if (!Util.RunApp(setting.SpreadSheet)) {
+                ErrorMessage.Show(ErrorMessage.ErrMsgId.FailToLaunchSpread);
+            }
+        }
 
+        /// <summary>
+        /// key down
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Main_PreviewKeyDown(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Escape) {
+                e.Handled = true;
+                base.SetWindowsState(true);
+            }
+        }
+
+        /// <summary>
+        /// key down
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SearchWord_PreviewKeyDown(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Enter) {
+                e.Handled = true;
+                var api = new TranlationApi();
+                api.TranslationApiResopnse += (status, result) => {
+                    switch(status) {
+                        case 200:
+                            var model = this.DataContext as MainViewModel;
+                            model.Result = result;
+                            break;
+                        default:
+                            ErrorMessage.Show(ErrorMessage.ErrMsgId.FailToLaunchSpread);
+                            break;
+                    }
+                };
+            }
         }
         #endregion
 
@@ -98,6 +153,16 @@ namespace SimpleTranslation {
             bool enabled = (0 < setting.TranslationApi?.Length);
             base.SetContextMenuEnabled(0, enabled);
             base.SetContextMenuEnabled(2, enabled);
+        }
+
+        /// <summary>
+        /// show 
+        /// </summary>
+        private void ShowScreen() {
+            var model = this.DataContext as MainViewModel;
+            model.SearchWord = "";
+            model.Result = "";
+            base.SetWindowsState(false);
         }
         #endregion
     }

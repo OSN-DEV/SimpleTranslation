@@ -60,8 +60,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppUtil\Constant.cs" />
+    <Compile Include="AppUtil\ErrorMessage.cs" />
     <Compile Include="Data\BindableBase.cs" />
+    <Compile Include="Data\MainViewModel.cs" />
     <Compile Include="Data\SettingViewModel.cs" />
+    <Compile Include="Data\TranlationApi.cs" />
     <Compile Include="UI\Setting.xaml.cs">
       <DependentUpon>Setting.xaml</DependentUpon>
     </Compile>

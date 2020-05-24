@@ -19,7 +19,7 @@ namespace SimpleTranslation.Data {
             set {
                 if (this.SetProperty(ref this._translationApi, value)) {
                     this.SetProperty(nameof(CanUseOk));
-                    this.SetProperty(nameof(OK));
+                    //this.SetProperty(nameof(OK));
                 }
             }
         }
@@ -33,7 +33,7 @@ namespace SimpleTranslation.Data {
             set {
                 if (this.SetProperty(ref this._spreadSheet, value)) {
                     this.SetProperty(nameof(CanUseOk));
-                    this.SetProperty(nameof(OK));
+                  //  this.SetProperty(nameof(OK));
                 }
             }
         }
@@ -78,7 +78,6 @@ namespace SimpleTranslation.Data {
         #region ICommandインターフェースの必須実装
 
         public event EventHandler CanExecuteChanged;
-
         public bool CanExecute(object parameter) {//とりあえずActionがあれば実行可能
             return _action != null;
         }
