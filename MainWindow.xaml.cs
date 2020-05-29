@@ -27,6 +27,10 @@ namespace SimpleTranslation {
         #region Constructor
         public MainWindow() {
             InitializeComponent();
+
+            this.Activated += (sender, e) => {
+                this.cSearch.Focus();
+            };
         }
         #endregion
 
@@ -126,13 +130,13 @@ namespace SimpleTranslation {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void SearchWord_PreviewKeyDown(object sender, KeyEventArgs e) {
+            var model = this.DataContext as MainViewModel;
             if (e.Key == Key.Enter) {
                 e.Handled = true;
                 var api = new TranlationApi();
                 api.TranslationApiResopnse += (status, result) => {
                     switch(status) {
                         case 200:
-                            var model = this.DataContext as MainViewModel;
                             model.Result = result;
                             break;
                         default:
@@ -140,6 +144,12 @@ namespace SimpleTranslation {
                             break;
                     }
                 };
+//                var model = this.DataContext as MainViewModel;
+                if (0 < model.SearchWord.Length) {
+                    api.Translate(model.SearchWord);
+                } else {
+                    model.Result = "";
+                }
             }
         }
         #endregion

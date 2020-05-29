@@ -30,7 +30,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="Search" Grid.Row="0" Grid.Column="0"/>
-        <u:CustomTextBox Text="{Binding SearchWord,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"  ImeMode="Disabled" TextWrapping="Wrap" VerticalContentAlignment="Center" PreviewKeyDown="SearchWord_PreviewKeyDown"/>
+        <u:CustomTextBox Name="cSearch" Text="{Binding SearchWord,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"  ImeMode="Disabled" TextWrapping="Wrap" VerticalContentAlignment="Center" PreviewKeyDown="SearchWord_PreviewKeyDown"/>
 
         <TextBlock Text="Result" Grid.Row="1" Grid.Column="0"/>
         <u:CustomTextBox  Text="{Binding Path=Result,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1"  ImeMode="Hiragana" VerticalContentAlignment="Top" AcceptsReturn="True" MaxLines="3" MinLines="3" Height="150" BorderThickness="1" />
