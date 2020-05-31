@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:SimpleTranslation"
         mc:Ignorable="d"
         xmlns:u="clr-namespace:OsnCsLib.WPFComponent;assembly=OsnCsLib.WPFComponent"
-        Title="MainWindow" Height="300" Width="400" ResizeMode="NoResize" PreviewKeyDown="Main_PreviewKeyDown">
+        Title="簡易翻訳ツール" Height="300" Width="400" ResizeMode="NoResize" PreviewKeyDown="Main_PreviewKeyDown" WindowState="Minimized">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -32,10 +32,10 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="Search" Grid.Row="0" Grid.Column="0"/>
-            <u:CustomTextBox Name="cSearch" Text="{Binding SearchWord,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"  ImeMode="Disabled" TextWrapping="Wrap" VerticalContentAlignment="Center" PreviewKeyDown="SearchWord_PreviewKeyDown"  IsEnabled="{Binding CanUseText}"/>
+            <u:CustomTextBox Name="cSearchWord" Text="{Binding SearchWord,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"  ImeMode="Disabled" TextWrapping="Wrap" VerticalContentAlignment="Center" PreviewKeyDown="SearchWord_PreviewKeyDown"/>
 
         <TextBlock Text="Result" Grid.Row="1" Grid.Column="0"/>
-            <u:CustomTextBox  Text="{Binding Path=TranslatedText,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1"  ImeMode="Hiragana" VerticalContentAlignment="Top" AcceptsReturn="True" MaxLines="3" MinLines="3" Height="150" BorderThickness="1"  IsEnabled="{Binding CanUseText}"/>
+            <u:CustomTextBox Name="cTranslatedText" Text="{Binding Path=TranslatedText,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1"  ImeMode="Hiragana" VerticalContentAlignment="Top" AcceptsReturn="True" MaxLines="3" MinLines="3" Height="150" BorderThickness="1"/>
 
         <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
@@ -43,8 +43,8 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Row="0" Name="cSave"  Grid.Column="1" Content="Save" Style="{StaticResource LabelButton}" IsDefault="True" IsEnabled="{Binding CanUseSave}" Command="{Binding Save}"/>
-            <Button Grid.Row="0" Grid.Column="2" Content="Cancel" Style="{StaticResource LabelButton}" IsCancel="True" Command="{Binding Cancel}"/>
+            <Button Grid.Row="0" Name="cSave"  Grid.Column="1" Content="Save" Style="{StaticResource LabelButton}" IsDefault="True" IsEnabled="{Binding CanUseSave}" Command="{Binding Save}" IsTabStop="False"/>
+            <Button Grid.Row="0" Grid.Column="2" Content="Cancel" Style="{StaticResource LabelButton}" IsCancel="True" Command="{Binding Cancel}" IsTabStop="False"/>
         </Grid>
 
     </Grid>

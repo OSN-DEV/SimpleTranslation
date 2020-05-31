@@ -16,14 +16,20 @@ namespace SimpleTranslation {
 
         #region Declaration
         private TranlationApi _api = new TranlationApi();
+        private bool _isLoaded = false;
         #endregion
 
         #region Constructor
         public MainWindow() {
             InitializeComponent();
-
             this.Activated += (sender, e) => {
-                this.cSearch.Focus();
+                this.cSearchWord.Focus();
+            };
+            this.Loaded += (sender, e) => {
+                var setting = AppRepository.GetInstance();
+                Util.SetWindowXPosition(this, setting.Pos.X);
+                Util.SetWindowYPosition(this, setting.Pos.Y);
+                this._isLoaded = true;
             };
 
             this._api.TranslateApiSuccess += TranslationApiSuccess;
@@ -42,7 +48,7 @@ namespace SimpleTranslation {
         /// setup
         /// </summary>
         protected override void SetUp() {
-            var setting = AppRepository.Init(Constant.SettingFile);
+            AppRepository.Init(Constant.SettingFile);
 
             base.SetUpHotKey(ModifierKeys.Control | ModifierKeys.Shift | ModifierKeys.Alt, Key.L);
             base.SetupNofityIcon("SimpleTranslation", new System.Drawing.Icon("app.ico"));
@@ -53,9 +59,6 @@ namespace SimpleTranslation {
             base.AddContextMenuSeparator();
             base.AddContextMenu("Exit", (sender, e) => { this.Close(); });
             this.SetContextMenuEnabled();
-
-            Util.SetWindowXPosition(this, setting.Pos.X);
-            Util.SetWindowYPosition(this, setting.Pos.Y);
 
             base.Minimized += MainWindow_Minimized;
             base.Normalized += () => { this.ShowScreen(); };
@@ -72,14 +75,16 @@ namespace SimpleTranslation {
         /// Window Minimized
         /// </summary>
         private void MainWindow_Minimized() {
-            var setting = AppRepository.GetInstance();
-            setting.Pos.X = this.Left;
-            setting.Pos.Y = this.Top;
-            setting.Save();
+            if (this._isLoaded) {
+                var setting = AppRepository.GetInstance();
+                setting.Pos.X = this.Left;
+                setting.Pos.Y = this.Top;
+                setting.Save();
+            }
         }
 
         private void SaveAction() {
-
+            // nop
         }
 
         /// <summary>
@@ -208,12 +213,26 @@ namespace SimpleTranslation {
 
         }
 
+        /// <summary>
+        /// api start
+        /// </summary>
         private void TranslationApiStart() {
-            this.cProceeding.Visibility = Visibility.Visible;
+            this.LockScreen(true);
         }
 
+        /// <summary>
+        /// api end
+        /// </summary>
         private void TranslationApiStop() {
-            this.cProceeding.Visibility = Visibility.Collapsed;
+            this.LockScreen(false);
+            this.cSearchWord.Focus();
+            this.cSearchWord.SelectAll();
+        }
+
+        private void LockScreen(bool locked) {
+            this.cProceeding.Visibility = locked ? Visibility.Visible : Visibility.Collapsed;
+            this.cSearchWord.IsEnabled = !locked;
+            this.cTranslatedText.IsEnabled = !locked;
         }
         #endregion
     }
