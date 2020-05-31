@@ -5,49 +5,59 @@ const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
  */
 function doGet(e) {
   
+  var body;
   var param = e.parameter;
-  var mode = param.mode; // 0: search, 1: save
+  var mode = param.mode; // 0: search, 1: save, 2: list
   if (!mode) {
-    mode = 0;
-  }
-  const src = param.src; // キー
-  if (!src) {
-    return sendResponse(400, 'src is not set.');
+    return sendFailure(400, 'mode is not set.');
   }
   
-  var savedRow = findRowNo(src);
-  if (0 == savedRow) {
-    savedRow = getNewRow();
+  // get list
+  if (2 == mode) {
+    return sendListResponse();
   }
   
-  // save value
+  const searchWord = param.search_word; // キー
+  if (!searchWord) {
+    return sendFailure(400, 'search word is not set.');
+  }
+  
+  var savedRow = findRowNo(searchWord);
+  
+  // save translated text
   if (1 == mode) {
-    if (!param.result) {
-      return sendResponse(400, 'result is not set.');
+    if (!param.translated_text) {
+      return sendFailure(400, 'translated text is not set.');
     }
-    sheet.getRange(savedRow, 2).setValue(param.result);
-    return sendResponse(200,'');
+    sheet.getRange(savedRow, 2).setValue(param.translated_text);
+    return sendSuccess(200,'', '');
   }
   
-  // translate
-  var translatedText = LanguageApp.translate(src, "en", "ja");
-  if (!translatedText) {
-    return sendResponse(204,'');
+   // translate
+  if (savedRow == getNewRow()) {
+    var translatedText = LanguageApp.translate(searchWord, "en", "ja");
+    if (!translatedText) {
+      return sendSuccess(204, '', '');
+    }
+    
+    // save search word and translated text
+    sheet.getRange(savedRow, 1).setValue(searchWord);
+    sheet.getRange(savedRow, 2).setValue(translatedText);
+  } else {
+    translatedText = sheet.getRange(savedRow, 2).getValue();
   }
   
-  sheet.getRange(savedRow, 1).setValue(src);
-  sheet.getRange(savedRow, 2).setValue(translatedText);
-
-  return sendResponse(200, translatedText);
+  return sendSuccess(200, searchWord, translatedText);
 }
 
 /*
  * create response body
  */
-function sendResponse(status, text) {
+function sendSuccess(status, searchWord, translatedText) {
   var body = {
-    code: status,
-    text: text
+    status: status,
+    searchWord: searchWord,
+    translatedText: translatedText
   };
   var response = ContentService.createTextOutput();
   response.setMimeType(ContentService.MimeType.JSON)
@@ -56,23 +66,54 @@ function sendResponse(status, text) {
 }
 
 /*
+ * create response body
+ */
+function sendFailure(status, error) {
+  var body = {
+    status: status,
+    error: error
+  };
+  var response = ContentService.createTextOutput();
+  response.setMimeType(ContentService.MimeType.JSON)
+  response.setContent(JSON.stringify(body));
+  return response;
+}
+
+/*
+ * get list
+ */
+function sendListResponse() {
+//  var xxx = sheet.getRange(1,1,sheet.getLastRow(), 2).getValues();
+  var response = ContentService.createTextOutput();
+  response.setMimeType(ContentService.MimeType.JSON)
+  response.setContent(JSON.stringify(sheet.getRange(1,1,sheet.getLastRow(), 2).getValues()));
+  return response;
+}
+
+/*
  * get matched row number
  * param val: search value.
  */
 function findRowNo(val) {
-  var data = sheet.getRange('A:B').getValues();
-  for(var i=1; i<data.length; i++) {
+  var lastRow = sheet.getLastRow();
+  var data = sheet.getRange(1,1,sheet.getLastRow(), 2).getValues();
+  for(var i=0; i<data.length; i++) {
     if (data[i][0] === val) {
       return i+1;
     }
   }
-  return 0;
+  return getNewRow();
 }
 
 /*
  * get new row number
  */
 function getNewRow() {
+  // 列を指定して行数を取得する場合はこちらを使用する
+//  const sheet = SpreadsheetApp.getActiveSheet();
+//  const columns = sheet.getRange('A:A').getValues();
+//  return columns.filter(String).length;
+  
   return sheet.getLastRow() + 1;
 }
 

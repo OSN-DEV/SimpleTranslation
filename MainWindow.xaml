@@ -1,0 +1,54 @@
+﻿<wpfcomponent:ResidentWindow
+    xmlns:wpfcomponent="clr-namespace:OsnCsLib.WPFComponent;assembly=OsnCsLib.WPFComponent"
+        x:Class="SimpleTranslation.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SimpleTranslation"
+        mc:Ignorable="d"
+        xmlns:u="clr-namespace:OsnCsLib.WPFComponent;assembly=OsnCsLib.WPFComponent"
+        Title="簡易翻訳ツール" Height="300" Width="400" ResizeMode="NoResize" PreviewKeyDown="Main_PreviewKeyDown" WindowState="Minimized">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SimpleTranslation;component/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid Margin="10" DockPanel.Dock="Top" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Search" Grid.Row="0" Grid.Column="0"/>
+            <u:CustomTextBox Name="cSearchWord" Text="{Binding SearchWord,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"  ImeMode="Disabled" TextWrapping="Wrap" VerticalContentAlignment="Center" PreviewKeyDown="SearchWord_PreviewKeyDown"/>
+
+        <TextBlock Text="Result" Grid.Row="1" Grid.Column="0"/>
+            <u:CustomTextBox Name="cTranslatedText" Text="{Binding Path=TranslatedText,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1"  ImeMode="Hiragana" VerticalContentAlignment="Top" AcceptsReturn="True" MaxLines="3" MinLines="3" Height="150" BorderThickness="1"/>
+
+        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Row="0" Name="cSave"  Grid.Column="1" Content="Save" Style="{StaticResource LabelButton}" IsDefault="True" IsEnabled="{Binding CanUseSave}" Command="{Binding Save}" IsTabStop="False"/>
+            <Button Grid.Row="0" Grid.Column="2" Content="Cancel" Style="{StaticResource LabelButton}" IsCancel="True" Command="{Binding Cancel}" IsTabStop="False"/>
+        </Grid>
+
+    </Grid>
+        <Label Name="cProceeding" Visibility="Collapsed" Content="now proceeding..." Width="400" Height="271" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="#ff333333" Background="#99D1CFCF"  />
+    </Grid>
+
+</wpfcomponent:ResidentWindow>
