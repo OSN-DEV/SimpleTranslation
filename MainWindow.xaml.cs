@@ -22,6 +22,7 @@ namespace SimpleTranslation {
         #region Constructor
         public MainWindow() {
             InitializeComponent();
+
             this.Activated += (sender, e) => {
                 this.cSearchWord.Focus();
             };
@@ -38,6 +39,10 @@ namespace SimpleTranslation {
             this._api.ApiFailure += TranslationApiFailure;
             this._api.ApiStart += TranslationApiStart;
             this._api.ApiStop += TranslationApiStop;
+
+            if (0 < AppRepository.GetInstance().TranslationApi?.Length) {
+                this._api.List();
+            }
         }
 
 
@@ -178,7 +183,10 @@ namespace SimpleTranslation {
             var model = this.DataContext as MainViewModel;
             model.SearchWord = "";
             model.TranslatedText = "";
-            base.SetWindowsState(false);
+            if (AppRepository.GetInstance()?.TranslationApi.Length == 0) {
+                ErrorMessage.Show(ErrorMessage.ErrMsgId.APIIsNotSet);
+                base.SetWindowsState(true);
+            }
         }
 
         /// <summary>
@@ -194,7 +202,15 @@ namespace SimpleTranslation {
         /// save api success
         /// </summary>
         private void SaveApiSuccess() {
+            // nop
+        }
 
+        /// <summary>
+        /// list api success
+        /// </summary>
+        /// <param name="list">list</param>
+        private void GetListApiSuccess(Dictionary<string, string> list) {
+            // nop
         }
 
         /// <summary>
@@ -203,14 +219,6 @@ namespace SimpleTranslation {
         /// <param name="status"></param>
         private void TranslationApiFailure(int status) {
             ErrorMessage.Show(ErrorMessage.ErrMsgId.FailToTranslate);
-        }
-
-        /// <summary>
-        /// list api success
-        /// </summary>
-        /// <param name="list">list</param>
-        private void GetListApiSuccess(Dictionary<string, string> list) {
-
         }
 
         /// <summary>
