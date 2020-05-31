@@ -32,6 +32,8 @@ namespace SimpleTranslation.Data {
         #endregion
 
         #region Declaration
+        private Dictionary<string, string> _list = new Dictionary<string, string>();
+
         private static class ApiMode {
             public static readonly int Search = 0;
             public static readonly int Save = 1;
@@ -50,6 +52,7 @@ namespace SimpleTranslation.Data {
             public static readonly string TranslatedText = "translatedText";
         }
 
+        // 面倒なので汎用性は捨てて今回のアプリでのみ動作することを前提にする(そもそもリストについてはJSON形式ですらない。。)
         private class JsonParser {
             private Dictionary<string, string> jsonData = new Dictionary<string, string>();
 
@@ -68,10 +71,17 @@ namespace SimpleTranslation.Data {
             }
             private void Parse(string json) {
                 var tmp = json.Replace("{", "").Replace("}", "")
-                    .Replace("[", "").Replace("]", "").Replace("\"", "");
-                foreach (var pair in tmp.Split(',')) {
-                    var p = pair.Split(':');
-                    jsonData.Add(p[0].Trim(), p[1].Trim());
+                    .Replace("[[", "[").Replace("]]", "]").Replace("\"", "");
+                if (0 <= tmp.IndexOf("[")) {
+                    foreach (var pair in tmp.Split(new string[] { "]," },StringSplitOptions.None)) {
+                        var p = pair.Replace("[","").Replace("]", "").Split(',');
+                        jsonData.Add(p[0].Trim(), p[1].Trim());
+                    }
+                } else {
+                    foreach (var pair in tmp.Split(',')) {
+                        var p = pair.Split(':');
+                        jsonData.Add(p[0].Trim(), p[1].Trim());
+                    }
                 }
             }
         }
@@ -123,6 +133,10 @@ namespace SimpleTranslation.Data {
         /// </summary>
         /// <param name="searchWord">word for translated</param>
         public void Translate(string searchWord) {
+            if (true == this._list.ContainsKey(searchWord)) {
+                TranslateApiSuccess?.Invoke(this._list[searchWord]);
+                return;
+            }
             this._apiMode = ApiMode.Search;
             var query = new QueryBuilder();
             query.Append(QueryKey.Mode, this._apiMode);
@@ -136,6 +150,11 @@ namespace SimpleTranslation.Data {
         /// <param name="searchWord">word for translated</param>
         /// <param name="translationText">translated text</param>
         public void Save(string searchWord, string translationText) {
+            if (true == this._list.ContainsKey(searchWord)) {
+                this._list[searchWord] = translationText;
+            } else {
+                this._list.Add(searchWord, translationText);
+            }
             this._apiMode = ApiMode.Search;
             var query = new QueryBuilder();
             query.Append(QueryKey.Mode, this._apiMode);
@@ -167,7 +186,7 @@ namespace SimpleTranslation.Data {
                 ApiFailure?.Invoke(102);
                 return "";
             }
-            //            this.IsBusy = true;
+            this.IsBusy = true;
             var url = AppRepository.GetInstance().TranslationApi + query.ToString();
             try {
                 using (var client = new HttpClient()) {
@@ -177,6 +196,7 @@ namespace SimpleTranslation.Data {
                     if (200 == status & !body.StartsWith("<!DOC")) {
                         var json = JsonParser.Create(body);
                         if (ApiMode.List == this._apiMode) {
+                            this._list = json.GetList();
                             GetListApiSuccess(json.GetList());
                         } else {
                             status = int.Parse(json.GetValue(JsonKey.Status));
