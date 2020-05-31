@@ -10,6 +10,9 @@ namespace SimpleTranslation.Data {
 
         #region Declaration
         private readonly TranlationApi _api = null;
+        public Action SaveAction { get; set; }
+        public Action SaveFailedAction { get; set; }
+        public Action CancelAction { get; set; }
         #endregion
 
         #region Constructor
@@ -18,6 +21,7 @@ namespace SimpleTranslation.Data {
         }
         #endregion
 
+        #region Public Property
         /// <summary>
         /// search keyword
         /// </summary>
@@ -66,14 +70,6 @@ namespace SimpleTranslation.Data {
         }
 
         /// <summary>
-        /// text enabled
-        /// </summary>
-        public bool CanUseText {
-            get {
-                return (!this._api.IsBusy);
-            }
-        }
-        /// <summary>
         /// Ok Button enabled
         /// </summary>
         public bool CanUseSave {
@@ -81,10 +77,7 @@ namespace SimpleTranslation.Data {
                 return (0 < this._translatedText.Length);
             }
         }
-
-        public Action SaveAction { get; set; }
-        public Action SaveFailedAction { get; set; }
-        public Action CancelAction { get; set; }
+        #endregion
     }
 
     public class SaveCommand : ICommand {
