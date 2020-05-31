@@ -186,6 +186,8 @@ namespace SimpleTranslation {
             if (AppRepository.GetInstance()?.TranslationApi.Length == 0) {
                 ErrorMessage.Show(ErrorMessage.ErrMsgId.APIIsNotSet);
                 base.SetWindowsState(true);
+            } else {
+                base.SetWindowsState(false);
             }
         }
 

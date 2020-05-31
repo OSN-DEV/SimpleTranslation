@@ -86,7 +86,7 @@ function sendListResponse() {
 //  var xxx = sheet.getRange(1,1,sheet.getLastRow(), 2).getValues();
   var response = ContentService.createTextOutput();
   response.setMimeType(ContentService.MimeType.JSON)
-  response.setContent(JSON.stringify(sheet.getRange(1,1,sheet.getLastRow(), 2).getValues()));
+  response.setContent(JSON.stringify(sheet.getRange(1,1, getNewRow(), 2).getValues()));
   return response;
 }
 
