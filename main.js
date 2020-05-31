@@ -83,7 +83,6 @@ function sendFailure(status, error) {
  * get list
  */
 function sendListResponse() {
-//  var xxx = sheet.getRange(1,1,sheet.getLastRow(), 2).getValues();
   var response = ContentService.createTextOutput();
   response.setMimeType(ContentService.MimeType.JSON)
   response.setContent(JSON.stringify(sheet.getRange(1,1, getNewRow(), 2).getValues()));
@@ -96,7 +95,7 @@ function sendListResponse() {
  */
 function findRowNo(val) {
   var lastRow = sheet.getLastRow();
-  var data = sheet.getRange(1,1,sheet.getLastRow(), 2).getValues();
+  var data = sheet.getRange(1,1,getNewRow(), 2).getValues();
   for(var i=0; i<data.length; i++) {
     if (data[i][0] === val) {
       return i+1;
