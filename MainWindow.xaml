@@ -16,7 +16,9 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid Margin="10">
+
+    <Grid>
+        <Grid Margin="10" DockPanel.Dock="Top" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="60" />
             <ColumnDefinition Width="*" />
@@ -30,10 +32,10 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="Search" Grid.Row="0" Grid.Column="0"/>
-        <u:CustomTextBox Name="cSearch" Text="{Binding SearchWord,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"  ImeMode="Disabled" TextWrapping="Wrap" VerticalContentAlignment="Center" PreviewKeyDown="SearchWord_PreviewKeyDown"/>
+            <u:CustomTextBox Name="cSearch" Text="{Binding SearchWord,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"  ImeMode="Disabled" TextWrapping="Wrap" VerticalContentAlignment="Center" PreviewKeyDown="SearchWord_PreviewKeyDown"  IsEnabled="{Binding CanUseText}"/>
 
         <TextBlock Text="Result" Grid.Row="1" Grid.Column="0"/>
-        <u:CustomTextBox  Text="{Binding Path=Result,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1"  ImeMode="Hiragana" VerticalContentAlignment="Top" AcceptsReturn="True" MaxLines="3" MinLines="3" Height="150" BorderThickness="1" />
+            <u:CustomTextBox  Text="{Binding Path=TranslatedText,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1"  ImeMode="Hiragana" VerticalContentAlignment="Top" AcceptsReturn="True" MaxLines="3" MinLines="3" Height="150" BorderThickness="1"  IsEnabled="{Binding CanUseText}"/>
 
         <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
@@ -41,11 +43,12 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Row="0"  Grid.Column="1" Content="Save" Style="{StaticResource LabelButton}" IsDefault="True" IsEnabled="{Binding CanUseSave}" Command="{Binding Save}"/>
+            <Button Grid.Row="0" Name="cSave"  Grid.Column="1" Content="Save" Style="{StaticResource LabelButton}" IsDefault="True" IsEnabled="{Binding CanUseSave}" Command="{Binding Save}"/>
             <Button Grid.Row="0" Grid.Column="2" Content="Cancel" Style="{StaticResource LabelButton}" IsCancel="True" Command="{Binding Cancel}"/>
         </Grid>
 
     </Grid>
-
+        <Label Name="cProceeding" Visibility="Collapsed" Content="now proceeding..." Width="400" Height="271" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="#ff333333" Background="#99D1CFCF"  />
+    </Grid>
 
 </wpfcomponent:ResidentWindow>

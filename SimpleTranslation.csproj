@@ -38,6 +38,22 @@
     <ApplicationIcon>app.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OsnCsLib.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\OsnCsLib.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="OsnCsLib.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\OsnCsLib.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="OsnCsLib.File, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\OsnCsLib.File.dll</HintPath>
+    </Reference>
+    <Reference Include="OsnCsLib.WPFComponent, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\OsnCsLib.WPFComponent.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -119,24 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="libs\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\OsnCsLib\Common\OsnCsLib.Common.csproj">
-      <Project>{cef63fd7-a8b3-4b76-a801-5bdc95a4045e}</Project>
-      <Name>OsnCsLib.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OsnCsLib\Data\OsnCsLib.Data.csproj">
-      <Project>{9ea7bcf2-4113-4db0-a84c-2a519573375a}</Project>
-      <Name>OsnCsLib.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OsnCsLib\File\OsnCsLib.File.csproj">
-      <Project>{514a455b-ade8-44d3-a345-c0da4988a5df}</Project>
-      <Name>OsnCsLib.File</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OsnCsLib\WPFComponent\OsnCsLib.WPFComponent.csproj">
-      <Project>{5483100c-ae23-4081-bf76-ed148e30fe1c}</Project>
-      <Name>OsnCsLib.WPFComponent</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="app.ico">
