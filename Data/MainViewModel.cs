@@ -13,6 +13,7 @@ namespace SimpleTranslation.Data {
         public Action SaveAction { get; set; }
         public Action SaveFailedAction { get; set; }
         public Action CancelAction { get; set; }
+        public Action ShowDataAction { get; set; }
         #endregion
 
         #region Constructor
@@ -60,11 +61,23 @@ namespace SimpleTranslation.Data {
         /// <summary>
         /// command
         /// </summary>
-        private CancelCommand _cancelCommand;
-        public CancelCommand Cancel {
+        private GeneralCommand _cancelCommand;
+        public GeneralCommand Cancel {
             get {
-                return _cancelCommand ?? (_cancelCommand = new CancelCommand(() => {
+                return _cancelCommand ?? (_cancelCommand = new GeneralCommand(() => {
                     this.CancelAction();
+                }));
+            }
+        }
+
+        /// <summary>
+        /// command
+        /// </summary>
+        private GeneralCommand _showDataCommand;
+        public GeneralCommand ShowData {
+            get {
+                return _showDataCommand ?? (_showDataCommand = new GeneralCommand(() => {
+                    this.ShowDataAction();
                 }));
             }
         }
@@ -100,10 +113,10 @@ namespace SimpleTranslation.Data {
     }
 
 
-    public class CancelCommand : ICommand {
+    public class GeneralCommand : ICommand {
         private Action _action;
 
-        public CancelCommand(Action action) {
+        public GeneralCommand(Action action) {
             _action = action;
         }
 

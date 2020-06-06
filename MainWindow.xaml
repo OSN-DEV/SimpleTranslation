@@ -43,7 +43,8 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Row="0" Name="cSave"  Grid.Column="1" Content="Save" Style="{StaticResource LabelButton}" IsDefault="True" IsEnabled="{Binding CanUseSave}" Command="{Binding Save}" IsTabStop="False"/>
+                <Button Grid.Row="0" Grid.Column="0" Content="Show Data" Style="{StaticResource LabelButton}" Command="{Binding ShowData}" />
+                <Button Grid.Row="0" Name="cSave"  Grid.Column="1" Content="Save" Style="{StaticResource LabelButton}" IsDefault="True" IsEnabled="{Binding CanUseSave}" Command="{Binding Save}" IsTabStop="False"/>
             <Button Grid.Row="0" Grid.Column="2" Content="Cancel" Style="{StaticResource LabelButton}" IsCancel="True" Command="{Binding Cancel}" IsTabStop="False"/>
         </Grid>
 

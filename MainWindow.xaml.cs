@@ -71,6 +71,7 @@ namespace SimpleTranslation {
             var model = new MainViewModel(this._api);
             model.SaveAction = new Action(this.SaveAction);
             model.CancelAction = new Action(this.CancelAction);
+            model.ShowDataAction = new Action(this.ShowDataAction);
             this.DataContext = model;
         }
         #endregion
@@ -97,6 +98,13 @@ namespace SimpleTranslation {
         /// </summary>
         private void CancelAction() {
             base.SetWindowsState(true);
+        }
+
+        /// <summary>
+        /// cancel
+        /// </summary>
+        private void ShowDataAction() {
+            this.Database_Click(null, null);
         }
         #endregion
 
