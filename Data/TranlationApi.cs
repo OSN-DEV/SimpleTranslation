@@ -72,16 +72,24 @@ namespace SimpleTranslation.Data {
             private void Parse(string json) {
                 var tmp = json.Replace("{", "").Replace("}", "")
                     .Replace("[[", "[").Replace("]]", "]").Replace("\"", "");
-                if (0 <= tmp.IndexOf("[")) {
-                    foreach (var pair in tmp.Split(new string[] { "]," },StringSplitOptions.None)) {
-                        var p = pair.Replace("[","").Replace("]", "").Split(',');
-                        jsonData.Add(p[0].Trim(), p[1].Trim());
+                try {
+                    if (0 <= tmp.IndexOf("[")) {
+                        foreach (var pair in tmp.Split(new string[] { "]," }, StringSplitOptions.None)) {
+                            var p = pair.Replace("[", "").Replace("]", "").Split(',');
+                            if (p.Length < 2 || p[0].Trim().Length == 0) {
+                                continue;
+                            }
+                            Console.WriteLine(p[0]);
+                            jsonData.Add(p[0].Trim(), p[1].Trim());
+                        }
+                    } else {
+                        foreach (var pair in tmp.Split(',')) {
+                            var p = pair.Split(':');
+                            jsonData.Add(p[0].Trim(), p[1].Trim());
+                        }
                     }
-                } else {
-                    foreach (var pair in tmp.Split(',')) {
-                        var p = pair.Split(':');
-                        jsonData.Add(p[0].Trim(), p[1].Trim());
-                    }
+                } catch(Exception ex) {
+                    Console.WriteLine(ex.Message);
                 }
             }
         }
@@ -155,7 +163,7 @@ namespace SimpleTranslation.Data {
             } else {
                 this._list.Add(searchWord, translationText);
             }
-            this._apiMode = ApiMode.Search;
+            this._apiMode = ApiMode.Save;
             var query = new QueryBuilder();
             query.Append(QueryKey.Mode, this._apiMode);
             query.Append(QueryKey.SearchWord, searchWord);
